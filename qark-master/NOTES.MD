@@ -17,7 +17,45 @@ I've downloaded these APKs, and stored them in the myApks-folder:
 https://f-droid.org/en/packages/org.billthefarmer.gridle/
 
 Run the tool for an APK:
-qark --apk qark-master/myApks/name_of_apk_file.apk
+qark --apk myApks/name_of_apk_file.apk
 
 I ran the tool for the gridle APK (gridle_122.apk), and results where stored in:
 qark-master\venv\lib\python3.12\site-packages\qark\report\report.html
+
+**PROBLEM**
+I ran the tool successfully ONCE, and now it always gives me 'RecursionError: maximum recursion depth exceeded'. I cant fix it. I already check the github issues for possible solutions.
+
+## How the tool works ##
+In qark/qark.py, they use 'click', a package for creating command line interfaces. The @click.option() lets you set a flag, that saves the passed value. 
+So @click.option("--apk", "source",...) saves the passed value after '--apk' in a variable called 'source'.
+I believe it then calls the cli() method with those option variables:
+- Runs decompiler (qark.decompiler.decompiler - Decompiler)
+- Runs scans (qark.scanner.scanner)
+- Writes report (qark.report)
+
+**Decompiler**
+"This class handles unpacking and decompiling APKs into Java source code."
+In qark.py, it inits the Compiler -> In init(), it calls:
+        self.dex_path = self._unpack_apk()
+        -> "Unpacks an APK and extracts its contents". Using an unzip.
+
+        self.jar_path = self._run_dex2jar()
+        -> "Runs dex2jar in the lib on the dex file". Uses the dex_path set by the _unpack_apk(). 
+
+        self.manifest_path = self.run_apktool()
+        -> "Runs `APK_TOOL_COMMAND` with the users path to APK to decompile the APK". 
+            Attempts to make apktool in lib/apktool/{operating_system}/ executable. (configure apk_tool)
+            
+
+
+Then qark calls .run() on the decompiler -> run():
+Uses DECOMPILERS imported from qark.decompiler.external_decompiler (compilers: cfr, procyon, fernflower).
+Runs each decompiler (in threads) using _decompiler_function(), waits for them to finish.
+
+Then calls unpack_fernflower_jar():
+"Fernflower puts its decompiled code back into a jar so we need to unpack it."
+Uses the 'jar xf ...' command I tried in BabelView. 
+
+**Scanner**
+
+**Reporter**

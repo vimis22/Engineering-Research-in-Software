@@ -18,6 +18,8 @@ OS = platform.system()
 JAVA_VERSION_REGEX = '((\d+\.\d+)(\.\d+)?)'
 APK_TOOL_PATH = os.path.join(LIB_PATH, "apktool")
 
+os.setrecursionlimit(2000)
+
 DEX2JAR_NAME = "dex2jar-2.0"
 DEX2JAR_PATH = os.path.join(LIB_PATH, DEX2JAR_NAME)
 DEX2JAR_EXTENSION = "sh" if OS != "Windows" else "bat"

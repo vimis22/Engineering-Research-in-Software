@@ -13,6 +13,7 @@ class ExternalDecompiler(object):
         self.path_to_decompiler = path_to_decompiler
         self.command = command
 
+os.setrecursionlimit(2000)
 
 class CFR(ExternalDecompiler):
     def __init__(self):

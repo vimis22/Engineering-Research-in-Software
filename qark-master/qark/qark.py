@@ -24,6 +24,7 @@ ANDROID_SDK_ROOT = "ANDROID_SDK_ROOT"
 
 logger = logging.getLogger(__name__)
 
+os.setrecursionlimit(2000)
 
 @click.command()
 @click.option("--sdk-path", type=click.Path(exists=True, file_okay=False, resolve_path=True),

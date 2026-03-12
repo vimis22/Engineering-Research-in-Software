@@ -15,6 +15,7 @@ from qark.xml_helpers import write_key_value_to_string_array_xml, write_key_valu
 
 log = logging.getLogger(__name__)
 
+os.setrecursionlimit(2000)
 
 COMPONENT_ENTRIES = {"activity": ("onCreate", "onStart"),
                      "activity-alias": ("onCreate", "onStart"),
